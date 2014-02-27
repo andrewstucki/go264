@@ -90,17 +90,194 @@ func TestStreamEncode(t *testing.T) {
 }
 func TestStreamDecode(t *testing.T) {
 	file, _ := os.Open("res/test_vd_1d.264")
-	if streamDecode(file) != "5827d2338b79ff82cd091c707823e466197281d3" {
+	fileHash := "5827d2338b79ff82cd091c707823e466197281d3"
+	if streamDecode(file) != fileHash {
 		t.FailNow()
 	}
 
 	file, _ = os.Open("res/test_vd_rc.264")
-	if streamDecode(file) != "eea02e97bfec89d0418593a8abaaf55d02eaa1ca" {
+	fileHash = "eea02e97bfec89d0418593a8abaaf55d02eaa1ca"
+	if streamDecode(file) != fileHash {
 		t.FailNow()
 	}
 
 	file, _ = os.Open("res/Static.264")
-	if streamDecode(file) != "91dd4a7a796805b2cd015cae8fd630d96c663f42" {
+	fileHash = "91dd4a7a796805b2cd015cae8fd630d96c663f42"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BA1_FT_C.264")
+	fileHash = "418d152fb85709b6f172799dcb239038df437cfa"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BA1_Sony_D.jsv")
+	fileHash = "d94b5ceed5686a03ea682b53d415dee999d27eb6"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BAMQ1_JVC_C.264")
+	fileHash = "613cf662c23e5d9e1d7da7fe880a3c427411d171"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BAMQ2_JVC_C.264")
+	fileHash = "11bcf3713f520e606a8326d37e00e5fd6c9fd4a0"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BA_MW_D.264")
+	fileHash = "afd7a9765961ca241bb4bdf344b31397bec7465a"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BANM_MW_D.264")
+	fileHash = "92d924a857a1a7d7d9b224eaa3887830f15dee7f"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/BASQP1_Sony_C.jsv")
+	fileHash = "3986c8c9d2876d2f0748b925101b152c6ec8b811"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/CI1_FT_B.264")
+	fileHash = "cbfec15e17a504678b19a1191992131c92a1ac26"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/CI_MW_D.264")
+	fileHash = "289f29a103c8d95adf2909c646466904be8b06d7"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/CVFC1_Sony_C.jsv")
+	fileHash = "4641abd7419a5580b97f16e83fd1d566339229d0"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/CVPCMNL1_SVA_C.264")
+	fileHash = "c2b0d964de727c64b9fccb58f63b567c82bda95a"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/LS_SVA_D.264")
+	fileHash = "72118f4d1674cf14e58bed7e67cb3aeed3df62b9"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/MIDR_MW_D.264")
+	fileHash = "9467030f4786f75644bf06a7fc809c36d1959827"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/MPS_MW_A.264")
+	fileHash = "67f1cfbef0e8025ed60dedccf8d9558d0636be5f"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/MR1_BT_A.h264")
+	fileHash = "6e585f8359667a16b03e5f49a06f5ceae8d991e0"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/MR1_MW_A.264")
+	fileHash = "d9e2bf34e9314dcc171ddaea2c5015d0421479f2"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/MR2_MW_A.264")
+	fileHash = "628b1d4eff04c2d277f7144e23484957dad63cbe"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/MR2_TANDBERG_E.264")
+	fileHash = "74d618bc7d9d41998edf4c85d51aa06111db6609"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/NL1_Sony_D.jsv")
+	fileHash = "e401e30669938443c2f02522fd4d5aa1382931a0"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/NLMQ1_JVC_C.264")
+	fileHash = "f3265c6ddf8db1b2bf604d8a2954f75532e28cda"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/NLMQ2_JVC_C.264")
+	fileHash = "350ae86ef9ba09390d63a09b7f9ff54184109ca8"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/NRF_MW_E.264")
+	fileHash = "20732198c04cd2591350a361e4510892f6eed3f0"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_BA1_B.264")
+	fileHash = "c4543b24823b16c424c673616c36c7f537089b2d"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_BA2_D.264")
+	fileHash = "98ff2d67860462d8d8bcc9352097c06cc401d97e"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_Base_B.264")
+	fileHash = "91f514d81cd33de9f6fbf5dbefdb189cc2e7ecf4"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_CL1_E.264")
+	fileHash = "4fe09ab6cdc965ea10a20f1d6dd38aca954412bb"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_FM1_E.264")
+	fileHash = "fad08c4ff7cf2307b6579853d0f4652fc26645d3"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_NL1_B.264")
+	fileHash = "6d63f72a0c0d833b1db0ba438afff3b4180fb3e6"
+	if streamDecode(file) != fileHash {
+		t.FailNow()
+	}
+
+	file, _ = os.Open("res/SVA_NL2_E.264")
+	fileHash = "70453ef8097c94dd190d6d2d1d5cb83c67e66238"
+	if streamDecode(file) != fileHash {
 		t.FailNow()
 	}
 }

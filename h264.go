@@ -42,6 +42,10 @@ int encoder_get_option(ISVCEncoder *encoder, ENCODER_OPTION eOptionId, void *pOp
   return ((*encoder)->GetOption)(encoder, eOptionId, pOption);
 }
 
+int encoder_get_default_params(ISVCEncoder *encoder, SEncParamExt* pParam) {
+  return ((*encoder)->GetDefaultParams)(encoder, pParam);
+}
+
 long decoder_initialize(ISVCDecoder *decoder, const SDecodingParam *pParam) {
   return ((*decoder)->Initialize)(decoder, pParam);
 }
@@ -134,6 +138,16 @@ func (e *ISVCEncoder) EncodeFrame(kpSrcPic *SourcePicture, pBsInfo *FrameBSInfo)
 	kpSrcPic.updateStruct()
 	ret = int(_ret)
 	return
+}
+
+func (e *ISVCEncoder) GetDefaultParams() (ret int, param *EncParamExt){
+ param = &EncParamExt{}
+ var _param C.SEncParamExt
+ _ret := C.encoder_get_default_params(e.base, &_param)
+ param.base = &_param
+ param.updateStruct()
+ ret = int(_ret)
+ return
 }
 
 func (e *ISVCEncoder) EncodeParameterSets(pBsInfo *FrameBSInfo) (ret int) {
