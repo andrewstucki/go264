@@ -108,7 +108,7 @@ func DestroySVCEncoder(encoder *ISVCEncoder) {
 }
 
 func (e *ISVCEncoder) Initialize(pParam *EncParamBase) (ret int) {
-  pParam.updateBase()
+	pParam.updateBase()
 	_ret := C.encoder_initialize(e.base, pParam.base)
 	ret = int(_ret)
 	return
@@ -207,46 +207,44 @@ func (d *ISVCDecoder) Uninitialize() (ret int64) {
 	return
 }
 
-
 /*
 func (d *ISVCDecoder) DecodeFrame (pSrc string, iSrcLen int, ppDst *string, pStride *int, iWidth *int, iHeight *int) (ret DecodingState) {
 
 }
 */
 
-func (d *ISVCDecoder) DecodeFrame2 (source []byte, pDstInfo *BufferInfo) (data [][]byte, ret DecodingState) {
-  var _data [3]*byte
-  var _pSrc *C.uchar
-  _srcLen := C.int(len(source))
-  if _srcLen > 0 {
-    _pSrc = (*C.uchar)(&source[0])
-  } else {
-    _pSrc = nil
-  }
-  pDstInfo.updateBase()
-  _ret := C.decoder_decode_frame2(d.base, _pSrc, _srcLen, (*unsafe.Pointer)(unsafe.Pointer(&_data[0])), pDstInfo.base)
-  pDstInfo.updateStruct()
-  q := make([][]byte, 3)
-  var width, height, stride int
-  ret = DecodingState(_ret)
-  if pDstInfo.BufferStatus == 1 {
-    for i, _d := range _data {
-      if i == 0 {
-        width = pDstInfo.SystemBuffer.Width
-        height = pDstInfo.SystemBuffer.Height
-        stride = pDstInfo.SystemBuffer.Stride[0]        
-      } else {
-        width = pDstInfo.SystemBuffer.Width/2
-        height = pDstInfo.SystemBuffer.Height/2
-        stride = pDstInfo.SystemBuffer.Stride[1]
-      }
-      q[i] = (*[1<<30]byte)(unsafe.Pointer(_d))[:width+stride*(height-1)]
-    }
-    data = q
-  }
-  return
+func (d *ISVCDecoder) DecodeFrame2(source []byte, pDstInfo *BufferInfo) (data [][]byte, ret DecodingState) {
+	var _data [3]*byte
+	var _pSrc *C.uchar
+	_srcLen := C.int(len(source))
+	if _srcLen > 0 {
+		_pSrc = (*C.uchar)(&source[0])
+	} else {
+		_pSrc = nil
+	}
+	pDstInfo.updateBase()
+	_ret := C.decoder_decode_frame2(d.base, _pSrc, _srcLen, (*unsafe.Pointer)(unsafe.Pointer(&_data[0])), pDstInfo.base)
+	pDstInfo.updateStruct()
+	q := make([][]byte, 3)
+	var width, height, stride int
+	ret = DecodingState(_ret)
+	if pDstInfo.BufferStatus == 1 {
+		for i, _d := range _data {
+			if i == 0 {
+				width = pDstInfo.SystemBuffer.Width
+				height = pDstInfo.SystemBuffer.Height
+				stride = pDstInfo.SystemBuffer.Stride[0]
+			} else {
+				width = pDstInfo.SystemBuffer.Width / 2
+				height = pDstInfo.SystemBuffer.Height / 2
+				stride = pDstInfo.SystemBuffer.Stride[1]
+			}
+			q[i] = (*[1 << 30]byte)(unsafe.Pointer(_d))[:width+stride*(height-1)]
+		}
+		data = q
+	}
+	return
 }
-
 
 /*
 { // y plane
@@ -524,7 +522,7 @@ func NewSliceConfig() *SliceConfig {
 	var _sliceConfig C.SSliceConfig
 
 	_sliceArgument = NewSliceArgument()
-  _sliceArgument.base = &_sliceConfig.sSliceArgument 
+	_sliceArgument.base = &_sliceConfig.sSliceArgument
 
 	return &SliceConfig{mode, _sliceArgument, &_sliceConfig}
 }
@@ -568,7 +566,7 @@ func NewSpatialLayerConfig() *SpatialLayerConfig {
 
 	_sliceConfig = NewSliceConfig()
 
-  _sliceConfig.base = &_spatialLayerConfig.sSliceCfg
+	_sliceConfig.base = &_spatialLayerConfig.sSliceCfg
 
 	return &SpatialLayerConfig{width, height, rateOut, bitrate, idc, initialQP, _sliceConfig, &_spatialLayerConfig}
 }
@@ -695,92 +693,92 @@ func NewEncParamExt() *EncParamExt {
 }
 
 func (p *EncParamExt) updateBase() {
-  p.base.iUsageType = C.int(p.UsageType)
-  p.base.iInputCsp = C.int(p.InputCsp)
-  p.base.iPicWidth = C.int(p.SourceWidth)
-  p.base.iTargetBitrate = C.int(p.TargetBitrate)
-  p.base.iRCMode = C.int(p.RCMode)
-  p.base.fMaxFrameRate = C.float(p.MaxFrameRate)
-  p.base.iTemporalLayerNum = C.int(p.TemporalLayerNumber)
-  p.base.iSpatialLayerNum = C.int(p.NumLayers)
-  
-  for _, layer := range p.SpatialLayers {
-    layer.updateBase()
-  }
-  
-  p.base.uiIntraPeriod = C.uint(p.IntraPeriod)
-  p.base.iNumRefFrame = C.int(p.NumRefFrame)
-  p.base.uiFrameToBeCoded = C.uint(p.FramesToBeEncoded)
-  p.base.bEnableSpsPpsIdAddition = C.bool(p.EnableSpsPpsIDAddition)
-  p.base.bPrefixNalAddingCtrl = C.bool(p.PrefixNALAddingCtrl)
-  p.base.bEnableSSEI = C.bool(p.EnableScalableSEI)
-  p.base.iPaddingFlag = C.int(p.PaddingFlag)
-  p.base.iEtropyCodingModeFlag = C.int(p.EntropyCodingModeFlag)
-  p.base.bEnableRc = C.bool(p.EnableRC)
-  p.base.bEnableFrameSkip = C.bool(p.EnableFrameSkip)
-  p.base.iMaxQp = C.int(p.MaxQp)
-  p.base.iMinQp = C.int(p.MinQp)
-  p.base.bEnableLongTermReference = C.bool(p.EnableLongTermReference)
-  p.base.iLTRRefNum = C.int(p.LTRRefNum)
-  p.base.iLtrMarkPeriod = C.int(p.LtrMarkPeriod)
-  p.base.iMultipleThreadIdc = C.short(p.MultipleThreadIdc)
-  p.base.iCountThreadsNum = C.short(p.CountThreadsNum)
-  p.base.iLoopFilterDisableIdc = C.int(p.LoopFilterDisableIDC)
-  p.base.iLoopFilterAlphaC0Offset = C.int(p.LoopFilterAlphaC0Offset)
-  p.base.iLoopFilterBetaOffset = C.int(p.LoopFilterBetaOffset)
-  p.base.iInterLayerLoopFilterDisableIdc = C.int(p.InterLayerLoopFilterDisableIDC)
-  p.base.iInterLayerLoopFilterAlphaC0Offset = C.int(p.InterLayerLoopFilterAlphaC0Offset)
-  p.base.iInterLayerLoopFilterBetaOffset = C.int(p.InterLayerLoopFilterBetaOffset)
-  p.base.bEnableDenoise = C.bool(p.EnableDenoise)
-  p.base.bEnableBackgroundDetection = C.bool(p.EnableBackgroundDetection)
-  p.base.bEnableAdaptiveQuant = C.bool(p.EnableAdaptiveQuantization)
-  p.base.bEnableFrameCroppingFlag = C.bool(p.EnableFrameCroppingFlag)
-  p.base.bEnableSceneChangeDetect = C.bool(p.EnableSceneChangeDetection)
+	p.base.iUsageType = C.int(p.UsageType)
+	p.base.iInputCsp = C.int(p.InputCsp)
+	p.base.iPicWidth = C.int(p.SourceWidth)
+	p.base.iTargetBitrate = C.int(p.TargetBitrate)
+	p.base.iRCMode = C.int(p.RCMode)
+	p.base.fMaxFrameRate = C.float(p.MaxFrameRate)
+	p.base.iTemporalLayerNum = C.int(p.TemporalLayerNumber)
+	p.base.iSpatialLayerNum = C.int(p.NumLayers)
+
+	for _, layer := range p.SpatialLayers {
+		layer.updateBase()
+	}
+
+	p.base.uiIntraPeriod = C.uint(p.IntraPeriod)
+	p.base.iNumRefFrame = C.int(p.NumRefFrame)
+	p.base.uiFrameToBeCoded = C.uint(p.FramesToBeEncoded)
+	p.base.bEnableSpsPpsIdAddition = C.bool(p.EnableSpsPpsIDAddition)
+	p.base.bPrefixNalAddingCtrl = C.bool(p.PrefixNALAddingCtrl)
+	p.base.bEnableSSEI = C.bool(p.EnableScalableSEI)
+	p.base.iPaddingFlag = C.int(p.PaddingFlag)
+	p.base.iEtropyCodingModeFlag = C.int(p.EntropyCodingModeFlag)
+	p.base.bEnableRc = C.bool(p.EnableRC)
+	p.base.bEnableFrameSkip = C.bool(p.EnableFrameSkip)
+	p.base.iMaxQp = C.int(p.MaxQp)
+	p.base.iMinQp = C.int(p.MinQp)
+	p.base.bEnableLongTermReference = C.bool(p.EnableLongTermReference)
+	p.base.iLTRRefNum = C.int(p.LTRRefNum)
+	p.base.iLtrMarkPeriod = C.int(p.LtrMarkPeriod)
+	p.base.iMultipleThreadIdc = C.short(p.MultipleThreadIdc)
+	p.base.iCountThreadsNum = C.short(p.CountThreadsNum)
+	p.base.iLoopFilterDisableIdc = C.int(p.LoopFilterDisableIDC)
+	p.base.iLoopFilterAlphaC0Offset = C.int(p.LoopFilterAlphaC0Offset)
+	p.base.iLoopFilterBetaOffset = C.int(p.LoopFilterBetaOffset)
+	p.base.iInterLayerLoopFilterDisableIdc = C.int(p.InterLayerLoopFilterDisableIDC)
+	p.base.iInterLayerLoopFilterAlphaC0Offset = C.int(p.InterLayerLoopFilterAlphaC0Offset)
+	p.base.iInterLayerLoopFilterBetaOffset = C.int(p.InterLayerLoopFilterBetaOffset)
+	p.base.bEnableDenoise = C.bool(p.EnableDenoise)
+	p.base.bEnableBackgroundDetection = C.bool(p.EnableBackgroundDetection)
+	p.base.bEnableAdaptiveQuant = C.bool(p.EnableAdaptiveQuantization)
+	p.base.bEnableFrameCroppingFlag = C.bool(p.EnableFrameCroppingFlag)
+	p.base.bEnableSceneChangeDetect = C.bool(p.EnableSceneChangeDetection)
 }
 
 func (p *EncParamExt) updateStruct() {
-  p.UsageType = int(p.base.iUsageType)
-  p.InputCsp = int(p.base.iInputCsp)
-  p.SourceWidth = int(p.base.iPicWidth)
-  p.SourceHeight = int(p.base.iPicHeight)
-  p.TargetBitrate = int(p.base.iTargetBitrate)
-  p.RCMode = int(p.base.iRCMode)
-  p.MaxFrameRate = float64(p.base.fMaxFrameRate)
-  p.TemporalLayerNumber = int(p.base.iTemporalLayerNum)
-  p.NumLayers = int(p.base.iSpatialLayerNum)
-  
-  for _, layer := range p.SpatialLayers {
-    layer.updateStruct()
-  }
-  
-  p.IntraPeriod = uint(p.base.uiIntraPeriod)
-  p.NumRefFrame = int(p.base.iNumRefFrame)
-  p.FramesToBeEncoded = uint(p.base.uiFrameToBeCoded)
-  p.EnableSpsPpsIDAddition = bool(p.base.bEnableSpsPpsIdAddition)
-  p.PrefixNALAddingCtrl = bool(p.base.bPrefixNalAddingCtrl)
-  p.EnableScalableSEI = bool(p.base.bEnableSSEI)
-  p.PaddingFlag = int(p.base.iPaddingFlag)
-  p.EntropyCodingModeFlag = int(p.base.iEtropyCodingModeFlag)
-  p.EnableRC = bool(p.base.bEnableRc)
-  p.EnableFrameSkip = bool(p.base.bEnableFrameSkip)
-  p.MaxQp = int(p.base.iMaxQp)
-  p.MinQp = int(p.base.iMinQp)
-  p.EnableLongTermReference = bool(p.base.bEnableLongTermReference)
-  p.LTRRefNum = int(p.base.iLTRRefNum)
-  p.LtrMarkPeriod = int(p.base.iLtrMarkPeriod)
-  p.MultipleThreadIdc = int16(p.base.iMultipleThreadIdc)
-  p.CountThreadsNum = int16(p.base.iCountThreadsNum)
-  p.LoopFilterDisableIDC = int(p.base.iLoopFilterDisableIdc)
-  p.LoopFilterAlphaC0Offset = int(p.base.iLoopFilterAlphaC0Offset)
-  p.LoopFilterBetaOffset = int(p.base.iLoopFilterBetaOffset)
-  p.InterLayerLoopFilterDisableIDC = int(p.base.iInterLayerLoopFilterDisableIdc)
-  p.InterLayerLoopFilterAlphaC0Offset = int(p.base.iInterLayerLoopFilterAlphaC0Offset)
-  p.InterLayerLoopFilterBetaOffset = int(p.base.iInterLayerLoopFilterBetaOffset)
-  p.EnableDenoise = bool(p.base.bEnableDenoise)
-  p.EnableBackgroundDetection = bool(p.base.bEnableBackgroundDetection)
-  p.EnableAdaptiveQuantization = bool(p.base.bEnableAdaptiveQuant)
-  p.EnableFrameCroppingFlag = bool(p.base.bEnableFrameCroppingFlag)
-  p.EnableSceneChangeDetection = bool(p.base.bEnableSceneChangeDetect)
+	p.UsageType = int(p.base.iUsageType)
+	p.InputCsp = int(p.base.iInputCsp)
+	p.SourceWidth = int(p.base.iPicWidth)
+	p.SourceHeight = int(p.base.iPicHeight)
+	p.TargetBitrate = int(p.base.iTargetBitrate)
+	p.RCMode = int(p.base.iRCMode)
+	p.MaxFrameRate = float64(p.base.fMaxFrameRate)
+	p.TemporalLayerNumber = int(p.base.iTemporalLayerNum)
+	p.NumLayers = int(p.base.iSpatialLayerNum)
+
+	for _, layer := range p.SpatialLayers {
+		layer.updateStruct()
+	}
+
+	p.IntraPeriod = uint(p.base.uiIntraPeriod)
+	p.NumRefFrame = int(p.base.iNumRefFrame)
+	p.FramesToBeEncoded = uint(p.base.uiFrameToBeCoded)
+	p.EnableSpsPpsIDAddition = bool(p.base.bEnableSpsPpsIdAddition)
+	p.PrefixNALAddingCtrl = bool(p.base.bPrefixNalAddingCtrl)
+	p.EnableScalableSEI = bool(p.base.bEnableSSEI)
+	p.PaddingFlag = int(p.base.iPaddingFlag)
+	p.EntropyCodingModeFlag = int(p.base.iEtropyCodingModeFlag)
+	p.EnableRC = bool(p.base.bEnableRc)
+	p.EnableFrameSkip = bool(p.base.bEnableFrameSkip)
+	p.MaxQp = int(p.base.iMaxQp)
+	p.MinQp = int(p.base.iMinQp)
+	p.EnableLongTermReference = bool(p.base.bEnableLongTermReference)
+	p.LTRRefNum = int(p.base.iLTRRefNum)
+	p.LtrMarkPeriod = int(p.base.iLtrMarkPeriod)
+	p.MultipleThreadIdc = int16(p.base.iMultipleThreadIdc)
+	p.CountThreadsNum = int16(p.base.iCountThreadsNum)
+	p.LoopFilterDisableIDC = int(p.base.iLoopFilterDisableIdc)
+	p.LoopFilterAlphaC0Offset = int(p.base.iLoopFilterAlphaC0Offset)
+	p.LoopFilterBetaOffset = int(p.base.iLoopFilterBetaOffset)
+	p.InterLayerLoopFilterDisableIDC = int(p.base.iInterLayerLoopFilterDisableIdc)
+	p.InterLayerLoopFilterAlphaC0Offset = int(p.base.iInterLayerLoopFilterAlphaC0Offset)
+	p.InterLayerLoopFilterBetaOffset = int(p.base.iInterLayerLoopFilterBetaOffset)
+	p.EnableDenoise = bool(p.base.bEnableDenoise)
+	p.EnableBackgroundDetection = bool(p.base.bEnableBackgroundDetection)
+	p.EnableAdaptiveQuantization = bool(p.base.bEnableAdaptiveQuant)
+	p.EnableFrameCroppingFlag = bool(p.base.bEnableFrameCroppingFlag)
+	p.EnableSceneChangeDetection = bool(p.base.bEnableSceneChangeDetect)
 }
 
 type EncParamExt struct {
@@ -802,7 +800,7 @@ type EncParamExt struct {
 	FramesToBeEncoded      uint //uiFrameToBeCoded
 	EnableSpsPpsIDAddition bool //bEnableSpsPpsIDAddition
 	PrefixNALAddingCtrl    bool //bPrefixNalAddingCtrl
-	EnableScalableSEI     bool //bEnableSSEI
+	EnableScalableSEI      bool //bEnableSSEI
 	PaddingFlag            int  //iPaddingFlag
 	EntropyCodingModeFlag  int  //iEntropyCodingModeFlag
 
@@ -818,12 +816,12 @@ type EncParamExt struct {
 	MultipleThreadIdc int16 //iMultipleThreadIdc
 	CountThreadsNum   int16 //iCountThreadsNum
 
-	LoopFilterDisableIDC             int //iLoopFilterDisableIdc
-	LoopFilterAlphaC0Offset          int //iLoopFilterAlphaC0Offset
-	LoopFilterBetaOffset             int //iLoopFilterBetaOffset
-	InterLayerLoopFilterDisableIDC   int //iInterLayerLoopFilterDisableIdc
+	LoopFilterDisableIDC              int //iLoopFilterDisableIdc
+	LoopFilterAlphaC0Offset           int //iLoopFilterAlphaC0Offset
+	LoopFilterBetaOffset              int //iLoopFilterBetaOffset
+	InterLayerLoopFilterDisableIDC    int //iInterLayerLoopFilterDisableIdc
 	InterLayerLoopFilterAlphaC0Offset int //iInterLayerLoopFilterAlphaC0Offset
-	InterLayerLoopFilterBetaOffset   int //iInterLayerLoopFilterBetaOffset
+	InterLayerLoopFilterBetaOffset    int //iInterLayerLoopFilterBetaOffset
 
 	EnableDenoise              bool //bEnableDenoise
 	EnableBackgroundDetection  bool //bEnableBackgroundDetection
@@ -928,7 +926,7 @@ func NewDecodingParam() *DecodingParam {
 
 	var _videoProperty = NewVideoProperty()
 
-  _videoProperty.base = &_decodingParam.sVideoProperty
+	_videoProperty.base = &_decodingParam.sVideoProperty
 
 	return &DecodingParam{fName, format, load, target, active, _videoProperty, &_decodingParam}
 }
@@ -988,7 +986,7 @@ func NewLayerBSInfo() *LayerBSInfo {
 	var nLengthInByte [MAX_NAL_UNITS_IN_LAYER]int
 	var buf *uint8
 	var _layerBSInfo C.SLayerBSInfo
-  
+
 	return &LayerBSInfo{temporal, spatial, quality, priority, layerType, nCount, nLengthInByte, buf, &_layerBSInfo}
 }
 
@@ -1003,22 +1001,22 @@ func (p *LayerBSInfo) updateBase() {
 	for index, val := range p.NALLengthInByte {
 		p.base.iNalLengthInByte[index] = C.int(val)
 	}
-	
+
 	p.base.pBsBuf = (*C.uchar)(unsafe.Pointer(p.BitstreamBuffer))
 }
 
 func (p *LayerBSInfo) updateStruct() {
-  p.TemporalId = uint8(p.base.uiTemporalId)
-  p.SpatialId = uint8(p.base.uiSpatialId)
-  p.QualityId = uint8(p.base.uiQualityId)
-  p.PriorityId = uint8(p.base.uiPriorityId)
-  p.LayerType = uint8(p.base.uiLayerType)
-  p.NALCount = int(p.base.iNalCount)
-  
-  for index, val := range p.base.iNalLengthInByte {
+	p.TemporalId = uint8(p.base.uiTemporalId)
+	p.SpatialId = uint8(p.base.uiSpatialId)
+	p.QualityId = uint8(p.base.uiQualityId)
+	p.PriorityId = uint8(p.base.uiPriorityId)
+	p.LayerType = uint8(p.base.uiLayerType)
+	p.NALCount = int(p.base.iNalCount)
+
+	for index, val := range p.base.iNalLengthInByte {
 		p.NALLengthInByte[index] = int(val)
 	}
-	
+
 	p.BitstreamBuffer = (*uint8)(unsafe.Pointer(p.base.pBsBuf))
 }
 
@@ -1062,7 +1060,7 @@ func NewFrameBSInfo() *FrameBSInfo {
 
 	for index, _ := range _lInfoArray {
 		_lInfoArray[index] = NewLayerBSInfo()
-		_lInfoArray[index].base = &_frameBSInfo.sLayerInfo[index]		
+		_lInfoArray[index].base = &_frameBSInfo.sLayerInfo[index]
 	}
 
 	return &FrameBSInfo{temporal, fType, layerNum, _lInfoArray, oFType, &_frameBSInfo}
@@ -1126,41 +1124,41 @@ func NewSourcePicture() *SourcePicture {
 }
 
 func (p *SourcePicture) updateBase() {
-  p.base.iColorFormat = C.int(p.ColorFormat)
-  
-  for index, val := range p.Stride {
-    p.base.iStride[index] = C.int(val)
-  }
-  
-  for index, val := range p.Data {
-    p.base.pData[index] = (*C.uchar)(unsafe.Pointer(val))
-  }
-  
-  p.base.iPicWidth = C.int(p.SourceWidth)
-  p.base.iPicHeight = C.int(p.SourceHeight)
+	p.base.iColorFormat = C.int(p.ColorFormat)
+
+	for index, val := range p.Stride {
+		p.base.iStride[index] = C.int(val)
+	}
+
+	for index, val := range p.Data {
+		p.base.pData[index] = (*C.uchar)(unsafe.Pointer(val))
+	}
+
+	p.base.iPicWidth = C.int(p.SourceWidth)
+	p.base.iPicHeight = C.int(p.SourceHeight)
 }
 
 func (p *SourcePicture) updateStruct() {
-  p.ColorFormat = int(p.base.iColorFormat)
-  
-  for index, val := range p.base.iStride {
-    p.Stride[index] = int(val)
-  }
-  
-  for index, val := range p.base.pData {
-    p.Data[index] = (*uint8)(unsafe.Pointer(val))
-  }
-  
-  p.SourceWidth = int(p.base.iPicWidth)
-  p.SourceHeight = int(p.base.iPicHeight)
+	p.ColorFormat = int(p.base.iColorFormat)
+
+	for index, val := range p.base.iStride {
+		p.Stride[index] = int(val)
+	}
+
+	for index, val := range p.base.pData {
+		p.Data[index] = (*uint8)(unsafe.Pointer(val))
+	}
+
+	p.SourceWidth = int(p.base.iPicWidth)
+	p.SourceHeight = int(p.base.iPicHeight)
 }
 
 type SourcePicture struct {
-	ColorFormat  int      //iColorFormat
-	Stride       [4]int   //iStride
+	ColorFormat  int       //iColorFormat
+	Stride       [4]int    //iStride
 	Data         [4]*uint8 //pData
-	SourceWidth  int      //iPicWidth
-	SourceHeight int      //iPicHeight
+	SourceWidth  int       //iPicWidth
+	SourceHeight int       //iPicHeight
 
 	base *C.SSourcePicture
 }
@@ -1290,41 +1288,41 @@ func NewSliceInfo() *SliceInfo {
 }
 
 func (p *SliceInfo) updateBase() {
-  p.base.pBufferOfSlices = (*C.uchar)(p.BufferOfSlices)
-  p.base.iCodedSliceCount = C.int(p.CodedSliceCount)
-  p.base.pLengthOfSlices = (*C.uint)(unsafe.Pointer(p.LengthOfSlices))
-  p.base.iFecType = C.int(p.FecType)
-  p.base.uiSliceIdx = C.uchar(p.SliceIdx)
-  p.base.uiSliceCount = C.uchar(p.SliceCount)
-  p.base.iFrameIndex = C.char(p.FrameIndex)
-  p.base.uiNalRefIdc = C.uchar(p.NalRefIdc)
-  p.base.uiNalType = C.uchar(p.NalType)
-  p.base.uiContainingFinalNal = C.uchar(p.ContainingFinalNal)
+	p.base.pBufferOfSlices = (*C.uchar)(p.BufferOfSlices)
+	p.base.iCodedSliceCount = C.int(p.CodedSliceCount)
+	p.base.pLengthOfSlices = (*C.uint)(unsafe.Pointer(p.LengthOfSlices))
+	p.base.iFecType = C.int(p.FecType)
+	p.base.uiSliceIdx = C.uchar(p.SliceIdx)
+	p.base.uiSliceCount = C.uchar(p.SliceCount)
+	p.base.iFrameIndex = C.char(p.FrameIndex)
+	p.base.uiNalRefIdc = C.uchar(p.NalRefIdc)
+	p.base.uiNalType = C.uchar(p.NalType)
+	p.base.uiContainingFinalNal = C.uchar(p.ContainingFinalNal)
 }
 
 func (p *SliceInfo) updateStruct() {
-  p.BufferOfSlices = (*uint8)(p.base.pBufferOfSlices)
-  p.CodedSliceCount = int(p.base.iCodedSliceCount)
-  p.LengthOfSlices = (*uint)(unsafe.Pointer(p.base.pLengthOfSlices))
-  p.FecType = int(p.base.iFecType)
-  p.SliceIdx = uint8(p.base.uiSliceIdx)
-  p.SliceCount = uint8(p.base.uiSliceCount)
-  p.FrameIndex = int8(p.base.iFrameIndex)
-  p.NalRefIdc = uint8(p.base.uiNalRefIdc)
-  p.NalType = uint8(p.base.uiNalType)
-  p.ContainingFinalNal = uint8(p.base.uiContainingFinalNal)
+	p.BufferOfSlices = (*uint8)(p.base.pBufferOfSlices)
+	p.CodedSliceCount = int(p.base.iCodedSliceCount)
+	p.LengthOfSlices = (*uint)(unsafe.Pointer(p.base.pLengthOfSlices))
+	p.FecType = int(p.base.iFecType)
+	p.SliceIdx = uint8(p.base.uiSliceIdx)
+	p.SliceCount = uint8(p.base.uiSliceCount)
+	p.FrameIndex = int8(p.base.iFrameIndex)
+	p.NalRefIdc = uint8(p.base.uiNalRefIdc)
+	p.NalType = uint8(p.base.uiNalType)
+	p.ContainingFinalNal = uint8(p.base.uiContainingFinalNal)
 }
 
 type SliceInfo struct {
-	BufferOfSlices      *uint8 //pBufferOfSlices
-	CodedSliceCount     int    //iCodedSliceCount
-	LengthOfSlices      *uint //pLengthOfSlices
-	FecType             int    //iFecType
-	SliceIdx            uint8  //uiSliceIdx
-	SliceCount          uint8  //uiSliceCount
-	FrameIndex          int8   //iFrameIndex
-	NalRefIdc           uint8  //uiNalRefIdc
-	NalType             uint8  //uiNalType
+	BufferOfSlices     *uint8 //pBufferOfSlices
+	CodedSliceCount    int    //iCodedSliceCount
+	LengthOfSlices     *uint  //pLengthOfSlices
+	FecType            int    //iFecType
+	SliceIdx           uint8  //uiSliceIdx
+	SliceCount         uint8  //uiSliceCount
+	FrameIndex         int8   //iFrameIndex
+	NalRefIdc          uint8  //uiNalRefIdc
+	NalType            uint8  //uiNalType
 	ContainingFinalNal uint8  //uiContainingFinalNal
 
 	base *C.SliceInfo
@@ -1464,7 +1462,7 @@ func NewBufferInfo() *BufferInfo {
 	var _bufferInfo C.SBufferInfo
 	var _sysMemBuffer = NewSysMemBuffer()
 
-  _sysMemBuffer.base = C.get_buffer_info_union_pointer(&_bufferInfo)
+	_sysMemBuffer.base = C.get_buffer_info_union_pointer(&_bufferInfo)
 
 	return &BufferInfo{bStatus, _sysMemBuffer, &_bufferInfo}
 }
@@ -1476,9 +1474,9 @@ func (p *BufferInfo) updateBase() {
 
 func (p *BufferInfo) updateStruct() {
 	p.BufferStatus = int(p.base.iBufferStatus)
-	
-/*  C.get_buffer_info_union_pointer(p.base)*/
-  
+
+	/*  C.get_buffer_info_union_pointer(p.base)*/
+
 	p.SystemBuffer.updateStruct()
 }
 
